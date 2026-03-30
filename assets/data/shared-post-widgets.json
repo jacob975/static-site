@@ -1,0 +1,17 @@
+{
+  "latestPosts": [
+    { "title": "解構 空之軌跡 the 1st", "href": "archives/20260330a.html" },
+    { "title": "測試 Copilot 的文章轉網頁能力", "href": "archives/20260330.html" },
+    { "title": "AI會取代人類嗎?", "href": "archives/2059.html" },
+    { "title": "隱式方程組的Python數值解作法", "href": "archives/2035.html" },
+    { "title": "期望值為正的賭場裡，大部分賭客卻都在賠錢!?", "href": "archives/1954.html" },
+    { "title": "使用 YOLOv5 完成 CVAT 自動影像標記", "href": "archives/1916.html" }
+  ],
+  "categories": [
+    { "title": "python 小抄", "href": "archives/category/python-小抄.html" },
+    { "title": "我的機器學習手稿", "href": "archives/category/我的機器學習手稿.html" },
+    { "title": "環境設定小訣竅", "href": "archives/category/環境設定小訣竅.html" },
+    { "title": "語言學習", "href": "archives/category/語言學習.html" },
+    { "title": "解構遊戲", "href": "archives/category/解構遊戲.html" }
+  ]
+}
