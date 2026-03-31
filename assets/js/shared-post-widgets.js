@@ -6,6 +6,17 @@
     return window.location.pathname.indexOf(ARCHIVES_DIR) !== -1;
   }
 
+  function isIndexLikePath() {
+    var path = window.location.pathname || "/";
+
+    if (path === "/" || path === "/index.html" || path.indexOf("index.html") !== -1) {
+      return true;
+    }
+
+    // Support GitHub Pages project root paths like /repo/.
+    return path.charAt(path.length - 1) === "/";
+  }
+
   function resolveHref(href, basePrefix) {
     if (!href || /^(https?:)?\/\//.test(href) || href.indexOf("#") === 0) {
       return href;
@@ -253,11 +264,7 @@
       return replaceBlogBlock(widget);
     }
 
-    if (
-      window.location.pathname === "/" ||
-      window.location.pathname === "/index.html" ||
-      window.location.pathname.indexOf("index.html") !== -1
-    ) {
+    if (isIndexLikePath()) {
       return replaceIndexBlock(widget);
     }
 
