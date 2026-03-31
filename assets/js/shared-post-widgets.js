@@ -273,10 +273,13 @@
 
     var widget = buildWidget(normalizedData);
 
+    // Prefer placeholder replacement when available so rendering is consistent
+    // regardless of route style (/repo/ vs /repo/index.html).
+    if (replaceByPlaceholder(widget)) {
+      return true;
+    }
+
     if (isArchivePage()) {
-      if (replaceByPlaceholder(widget)) {
-        return true;
-      }
       return replaceArchiveBlock(widget);
     }
 
