@@ -43,6 +43,26 @@
     return getBasePrefix() + DATA_PATH;
   }
 
+  function normalizeGitHubPagesRootToIndex() {
+    if (!/github\.io$/i.test(window.location.hostname)) {
+      return false;
+    }
+
+    var path = window.location.pathname || "/";
+    var segments = path.split("/").filter(function (segment) {
+      return segment.length > 0;
+    });
+
+    // Project site root is /<repo>/ and should resolve to /<repo>/index.html.
+    if (path.charAt(path.length - 1) === "/" && segments.length === 1) {
+      var nextUrl = path + "index.html" + (window.location.search || "") + (window.location.hash || "");
+      window.location.replace(nextUrl);
+      return true;
+    }
+
+    return false;
+  }
+
   function createSection(titleText, listClassName, items, basePrefix) {
     var section = document.createElement("section");
 
@@ -283,6 +303,10 @@
   }
 
   function init() {
+    if (normalizeGitHubPagesRootToIndex()) {
+      return;
+    }
+
     loadWidgetData()
       .then(function (data) {
         injectWidget(data);
