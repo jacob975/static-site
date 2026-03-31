@@ -1,6 +1,6 @@
 (function () {
-  var ARCHIVE_PREFIX = "archives/";
   var ARCHIVES_DIR = "/archives/";
+  var DATA_PATH = "assets/data/shared-post-widgets.json";
 
   function isArchivePage() {
     return window.location.pathname.indexOf(ARCHIVES_DIR) !== -1;
@@ -14,11 +14,22 @@
   }
 
   function getBasePrefix() {
-    return isArchivePage() ? "../" : "";
+    var path = window.location.pathname || "/";
+    var segments = path.split("/").filter(function (segment) {
+      return segment.length > 0;
+    });
+
+    // For GitHub Pages project sites, pages live under /<repo>/...
+    // Use the first path segment as a stable site prefix.
+    if (/github\.io$/i.test(window.location.hostname) && segments.length > 0) {
+      return "/" + segments[0] + "/";
+    }
+
+    return "/";
   }
 
   function getDataUrl() {
-    return getBasePrefix() + "assets/data/shared-post-widgets.json";
+    return getBasePrefix() + DATA_PATH;
   }
 
   function createSection(titleText, listClassName, items, basePrefix) {
@@ -72,6 +83,18 @@
     wrapper.appendChild(latestSection);
     wrapper.appendChild(categoriesSection);
     return wrapper;
+  }
+
+  function normalizeData(data) {
+    var source = data || {};
+    return {
+      latestPosts: Array.isArray(source.latestPosts) ? source.latestPosts : [],
+      categories: Array.isArray(source.categories) ? source.categories : []
+    };
+  }
+
+  function hasWidgetItems(data) {
+    return data.latestPosts.length > 0 || data.categories.length > 0;
   }
 
   function normalizedText(element) {
@@ -170,7 +193,22 @@
     return null;
   }
 
+  function replaceByPlaceholder(widget) {
+    var mount = document.getElementById("shared-post-widgets-mount");
+    if (!mount || !mount.parentElement) {
+      return false;
+    }
+
+    mount.parentElement.insertBefore(widget, mount);
+    mount.parentElement.removeChild(mount);
+    return true;
+  }
+
   function replaceIndexBlock(widget) {
+    if (replaceByPlaceholder(widget)) {
+      return true;
+    }
+
     var headings = Array.prototype.slice.call(document.querySelectorAll("h1, h2, h3, h4"));
     var latestHeading = headings.find(function (el) {
       return normalizedText(el) === "最新文章";
@@ -197,9 +235,17 @@
   }
 
   function injectWidget(data) {
-    var widget = buildWidget(data);
+    var normalizedData = normalizeData(data);
+    if (!hasWidgetItems(normalizedData)) {
+      return false;
+    }
+
+    var widget = buildWidget(normalizedData);
 
     if (isArchivePage()) {
+      if (replaceByPlaceholder(widget)) {
+        return true;
+      }
       return replaceArchiveBlock(widget);
     }
 
@@ -218,19 +264,24 @@
     return false;
   }
 
-  function init() {
-    fetch(getDataUrl())
+  function loadWidgetData() {
+    return fetch(getDataUrl())
       .then(function (response) {
         if (!response.ok) {
           throw new Error("Failed to load shared post widgets data.");
         }
         return response.json();
       })
+      .then(normalizeData);
+  }
+
+  function init() {
+    loadWidgetData()
       .then(function (data) {
         injectWidget(data);
       })
       .catch(function () {
-        // Keep legacy blocks untouched when data cannot be loaded.
+        // Keep existing markup untouched when shared data is unavailable.
       });
   }
 

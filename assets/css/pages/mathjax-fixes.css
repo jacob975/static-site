@@ -1,0 +1,19 @@
+/* Shared MathJax rendering fixes for archive articles. */
+
+mjx-container[jax="CHTML"] {
+    overflow: visible !important;
+    padding-bottom: 0.12em;
+}
+
+mjx-container[jax="CHTML"][display="true"] {
+    margin: 1em 0;
+}
+
+mjx-container[jax="CHTML"] mjx-math {
+    line-height: 1.35;
+}
+
+.kv-page-content p,
+.kv-page-content li {
+    overflow: visible;
+}
