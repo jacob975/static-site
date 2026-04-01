@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Analytics 追蹤設定</title>
+  <style>
+    body { font-family: sans-serif; max-width: 480px; margin: 80px auto; padding: 0 20px; color: #333; }
+    h1 { font-size: 1.4rem; margin-bottom: 8px; }
+    p { line-height: 1.6; }
+    #status { font-weight: bold; margin: 20px 0; }
+    button { padding: 10px 24px; font-size: 1rem; cursor: pointer; border: none; border-radius: 4px; color: #fff; }
+    #btn-disable { background: #c0392b; }
+    #btn-enable  { background: #27ae60; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <h1>Google Analytics 追蹤設定</h1>
+  <p>此頁面讓管理員可以停用本瀏覽器的 Google Analytics 流量追蹤，避免自己的瀏覽記錄影響統計數據。</p>
+  <p id="status"></p>
+  <button id="btn-disable" class="hidden">停用追蹤（管理員模式）</button>
+  <button id="btn-enable"  class="hidden">重新啟用追蹤</button>
+  <script>
+    var KEY = 'ga-opt-out';
+    var statusEl  = document.getElementById('status');
+    var btnDisable = document.getElementById('btn-disable');
+    var btnEnable  = document.getElementById('btn-enable');
+
+    function getOptOut() {
+      try { return localStorage.getItem(KEY) === 'true'; } catch(e) { return false; }
+    }
+
+    function refresh() {
+      var isOptOut = getOptOut();
+      if (isOptOut) {
+        statusEl.textContent  = '目前狀態：追蹤已停用 ✅';
+        statusEl.style.color  = '#c0392b';
+        btnDisable.classList.add('hidden');
+        btnEnable.classList.remove('hidden');
+      } else {
+        statusEl.textContent  = '目前狀態：追蹤已啟用';
+        statusEl.style.color  = '#27ae60';
+        btnDisable.classList.remove('hidden');
+        btnEnable.classList.add('hidden');
+      }
+    }
+
+    btnDisable.addEventListener('click', function() {
+      try { localStorage.setItem(KEY, 'true'); } catch(e) {}
+      refresh();
+    });
+
+    btnEnable.addEventListener('click', function() {
+      try { localStorage.removeItem(KEY); } catch(e) {}
+      refresh();
+    });
+
+    refresh();
+  </script>
+</body>
+</html>

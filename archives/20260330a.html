@@ -47,6 +47,7 @@
 	<script id="google_gtagjs-js-after">
 	window.dataLayer = window.dataLayer || [];
 	function gtag(){dataLayer.push(arguments);}
+	try{if(localStorage.getItem('ga-opt-out')==='true'){window['ga-disable-GT-WF8BSRC']=true;}}catch(e){}
 	gtag("set","linker",{"domains":["ylchiu.com"]});
 	gtag("js", new Date());
 	gtag("set", "developer_id.dZTNiMT", true);
