@@ -6,48 +6,133 @@
 	margin-top: 1.5rem;
 }
 
-#index-blog-post-list-mount .blog-post-list {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-	border-top: 1px solid rgba(33, 33, 33, 0.12);
+#index-blog-post-list-mount .index-post-cards {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 1.15rem;
+	margin-top: 1rem;
 }
 
-#index-blog-post-list-mount .blog-post-list li {
+#index-blog-post-list-mount .index-post-card {
+	position: relative;
+	background: linear-gradient(160deg, rgba(255, 255, 255, 0.92), rgba(250, 252, 255, 0.82));
+	border: 1px solid rgba(255, 255, 255, 0.7);
+	border-radius: 16px;
+	padding: 1.05rem 1rem;
+	box-shadow: 0 14px 28px rgba(17, 24, 39, 0.12), 0 3px 8px rgba(17, 24, 39, 0.08);
+	backdrop-filter: blur(4px);
 	display: flex;
-	justify-content: space-between;
-	align-items: baseline;
-	gap: 1.5rem;
-	padding: 0.75rem 0;
-	border-bottom: 1px solid rgba(33, 33, 33, 0.08);
-	transition: background 0.15s;
+	flex-direction: column;
+	gap: 0.75rem;
+	overflow: hidden;
+	transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
-#index-blog-post-list-mount .blog-post-list li:hover {
-	background: rgba(33, 33, 33, 0.03);
-	padding-left: 0.5rem;
-	padding-right: 0.5rem;
-	margin: 0 -0.5rem;
+#index-blog-post-list-mount .index-post-card::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: radial-gradient(circle at top right, rgba(116, 185, 255, 0.22), transparent 46%);
+	pointer-events: none;
 }
 
-#index-blog-post-list-mount .blog-post-list li a {
-	font-size: 1rem;
-	font-weight: 500;
+#index-blog-post-list-mount .index-post-card:hover {
+	transform: translateY(-8px);
+	border-color: rgba(116, 185, 255, 0.48);
+	box-shadow: 0 24px 40px rgba(17, 24, 39, 0.18), 0 8px 20px rgba(17, 24, 39, 0.12);
+}
+
+#index-blog-post-list-mount .index-post-card-title {
+	position: relative;
+	z-index: 1;
+	font-size: 1.05rem;
+	font-weight: 600;
+	line-height: 1.5;
 	color: var(--wb4wp-text-color, #212121);
 	text-decoration: none;
-	flex: 1;
-	line-height: 1.4;
 }
 
-#index-blog-post-list-mount .blog-post-list li a:hover {
-	text-decoration: underline;
-	color: var(--wb4wp-primary-color, #212121);
+#index-blog-post-list-mount .index-post-card-title:hover {
+	text-decoration: none;
+	color: #0f4c81;
 }
 
-#index-blog-post-list-mount .blog-post-list li time {
+#index-blog-post-list-mount .index-post-card-excerpt {
+	position: relative;
+	z-index: 1;
+	margin: 0;
+	font-size: 0.95rem;
+	line-height: 1.7;
+	color: rgba(33, 33, 33, 0.78);
+	min-height: 3.4em;
+}
+
+#index-blog-post-list-mount .index-post-card-meta {
+	position: relative;
+	z-index: 1;
+	margin-top: auto;
+	padding-top: 0.35rem;
 	font-size: 0.8rem;
-	color: rgba(33, 33, 33, 0.45);
-	white-space: nowrap;
-	flex-shrink: 0;
+	color: rgba(15, 76, 129, 0.7);
 	font-variant-numeric: tabular-nums;
+}
+
+#index-blog-post-list-mount .index-post-controls {
+	display: flex;
+	justify-content: center;
+	margin-top: 1.25rem;
+}
+
+#index-blog-post-list-mount .index-post-more-button {
+	appearance: none;
+	border: 1px solid rgba(15, 76, 129, 0.35);
+	background: rgba(255, 255, 255, 0.9);
+	color: #0f4c81;
+	border-radius: 999px;
+	padding: 0.55rem 1.2rem;
+	font-size: 0.92rem;
+	font-weight: 600;
+	line-height: 1;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+#index-blog-post-list-mount .index-post-more-button:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 8px 18px rgba(17, 24, 39, 0.15);
+	border-color: rgba(15, 76, 129, 0.55);
+}
+
+#index-blog-post-list-mount .index-post-more-button:disabled {
+	opacity: 0.7;
+	cursor: default;
+	transform: none;
+	box-shadow: none;
+}
+
+/* Floating block style for the built-in blog preview section. */
+.wpblogabc10 .kv-ee-section .kv-ee-post-wrapper {
+	background: linear-gradient(160deg, rgba(255, 255, 255, 0.92), rgba(250, 252, 255, 0.82));
+	border: 1px solid rgba(255, 255, 255, 0.72);
+	border-radius: 16px;
+	box-shadow: 0 14px 28px rgba(17, 24, 39, 0.12), 0 3px 8px rgba(17, 24, 39, 0.08);
+	padding: 1rem;
+	overflow: hidden;
+	transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.wpblogabc10 .kv-ee-section .kv-ee-post-wrapper:hover {
+	transform: translateY(-8px);
+	border-color: rgba(116, 185, 255, 0.48);
+	box-shadow: 0 24px 40px rgba(17, 24, 39, 0.18), 0 8px 20px rgba(17, 24, 39, 0.12);
+}
+
+.wpblogabc10 .kv-ee-section .kv-ee-post-wrapper .kv-ee-post-title {
+	line-height: 1.45;
+}
+
+@media (max-width: 640px) {
+	#index-blog-post-list-mount .index-post-cards {
+		grid-template-columns: 1fr;
+	}
 }

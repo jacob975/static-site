@@ -1,5 +1,7 @@
 (function () {
   var DATA_PATH = "assets/data/blog-post-list.json";
+  var EXCERPT_LENGTH = 200;
+  var INDEX_PAGE_SIZE = 10;
 
   function getBasePrefix() {
     var path = window.location.pathname || "/";
@@ -66,6 +68,102 @@
     return list;
   }
 
+  function sanitizeText(text) {
+    return (text || "").replace(/\s+/g, " ").trim();
+  }
+
+  function trimExcerpt(text, maxLength) {
+    if (!text) {
+      return "";
+    }
+
+    if (text.length <= maxLength) {
+      return text;
+    }
+
+    return text.slice(0, maxLength) + "...";
+  }
+
+  function extractContentTextFromHtml(html) {
+    if (!html) {
+      return "";
+    }
+
+    var parser = new DOMParser();
+    var doc = parser.parseFromString(html, "text/html");
+    var content = doc.querySelector(".entry-content .kv-page-content") || doc.querySelector("article") || doc.body;
+
+    return sanitizeText(content ? content.textContent : "");
+  }
+
+  function fetchPostExcerpt(postUrl) {
+    if (!postUrl) {
+      return Promise.resolve("");
+    }
+
+    return fetch(postUrl)
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error("Failed to load post html");
+        }
+        return response.text();
+      })
+      .then(extractContentTextFromHtml)
+      .then(function (text) {
+        return trimExcerpt(text, EXCERPT_LENGTH);
+      })
+      .catch(function () {
+        return "";
+      });
+  }
+
+  function createIndexPostCard(item) {
+    var card = document.createElement("article");
+    var titleLink = document.createElement("a");
+    var excerpt = document.createElement("p");
+    var meta = document.createElement("div");
+    var time = document.createElement("time");
+
+    card.className = "index-post-card";
+
+    titleLink.className = "index-post-card-title";
+    titleLink.href = item.href;
+    titleLink.textContent = item.title;
+
+    excerpt.className = "index-post-card-excerpt";
+    excerpt.textContent = item.excerpt || "（此文章尚無可顯示的摘要）";
+
+    meta.className = "index-post-card-meta";
+    time.dateTime = item.datetime;
+    time.textContent = item.datetime;
+    meta.appendChild(time);
+
+    card.appendChild(titleLink);
+    card.appendChild(excerpt);
+    card.appendChild(meta);
+
+    return card;
+  }
+
+  function loadIndexPostBatch(posts, start, size, basePrefix) {
+    var batch = posts.slice(start, start + size);
+
+    return Promise.all(
+      batch.map(function (post) {
+        var url = resolveHref(post.href, basePrefix);
+
+        return fetchPostExcerpt(url).then(function (excerpt) {
+          return {
+            title: post.title,
+            href: url,
+            datetime: post.datetime,
+            excerpt: excerpt
+          };
+        });
+      })
+    );
+  }
+
   function renderBlogPage(posts, basePrefix) {
     var mount = document.getElementById("blog-post-list-mount");
     if (!mount) {
@@ -84,14 +182,76 @@
     }
 
     var title = document.createElement("h2");
+    var cards = document.createElement("div");
+    var controls = document.createElement("div");
+    var moreButton = document.createElement("button");
+    var renderedCount = 0;
+    var isLoading = false;
 
     title.className = "wp-block-heading";
     title.textContent = "所有文章";
 
+    cards.className = "index-post-cards";
+
+    controls.className = "index-post-controls";
+    moreButton.className = "index-post-more-button";
+    moreButton.type = "button";
+    moreButton.textContent = "More";
+    controls.appendChild(moreButton);
+
     mount.innerHTML = "";
     mount.appendChild(title);
-    mount.appendChild(createPostList(posts, basePrefix));
-    return true;
+    mount.appendChild(cards);
+    mount.appendChild(controls);
+
+    function updateMoreButton() {
+      if (renderedCount >= posts.length) {
+        moreButton.style.display = "none";
+        return;
+      }
+
+      moreButton.style.display = "inline-flex";
+      moreButton.disabled = false;
+      moreButton.textContent = "More";
+    }
+
+    function loadMore() {
+      if (isLoading || renderedCount >= posts.length) {
+        return Promise.resolve();
+      }
+
+      isLoading = true;
+      moreButton.disabled = true;
+      moreButton.textContent = "Loading...";
+
+      return loadIndexPostBatch(posts, renderedCount, INDEX_PAGE_SIZE, basePrefix)
+        .then(function (items) {
+          items.forEach(function (item) {
+            cards.appendChild(createIndexPostCard(item));
+          });
+
+          renderedCount += items.length;
+          updateMoreButton();
+        })
+        .catch(function () {
+          moreButton.disabled = false;
+          moreButton.textContent = "Retry";
+        })
+        .finally(function () {
+          isLoading = false;
+        });
+    }
+
+    moreButton.addEventListener("click", loadMore);
+
+    if (!posts.length) {
+      controls.style.display = "none";
+      return true;
+    }
+
+    return loadMore().then(function () {
+      return true;
+    });
   }
 
   function loadData() {
