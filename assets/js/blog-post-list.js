@@ -3,11 +3,55 @@
   var EXCERPT_LENGTH = 200;
   var INDEX_PAGE_SIZE = 10;
 
+  function normalizePrefix(pathname) {
+    var normalized = pathname || "/";
+
+    if (normalized.charAt(0) !== "/") {
+      normalized = "/" + normalized;
+    }
+
+    if (normalized.charAt(normalized.length - 1) !== "/") {
+      normalized += "/";
+    }
+
+    return normalized;
+  }
+
+  function getPrefixFromScriptPath() {
+    var script = document.querySelector('script[src*="assets/js/blog-post-list.js"]');
+    var src = script && script.getAttribute("src");
+    var marker = "/assets/js/blog-post-list.js";
+    var scriptPath;
+    var markerIndex;
+
+    if (!src) {
+      return null;
+    }
+
+    try {
+      scriptPath = new URL(src, window.location.href).pathname;
+    } catch (e) {
+      return null;
+    }
+
+    markerIndex = scriptPath.lastIndexOf(marker);
+    if (markerIndex === -1) {
+      return null;
+    }
+
+    return normalizePrefix(scriptPath.slice(0, markerIndex + 1));
+  }
+
   function getBasePrefix() {
+    var prefixFromScript = getPrefixFromScriptPath();
     var path = window.location.pathname || "/";
     var segments = path.split("/").filter(function (segment) {
       return segment.length > 0;
     });
+
+    if (prefixFromScript) {
+      return prefixFromScript;
+    }
 
     if (/github\.io$/i.test(window.location.hostname) && segments.length > 0) {
       return "/" + segments[0] + "/";
