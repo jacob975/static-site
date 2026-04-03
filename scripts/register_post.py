@@ -123,6 +123,40 @@ def normalize_rel_path(path_value: str) -> str:
     return path_value.replace("\\", "/")
 
 
+def resolve_nav_prefix(path: Path) -> str:
+    parts = [p for p in path.parts if p not in ("", ".")]
+    if not parts:
+        return ""
+
+    if parts[0] == "archives":
+        if len(parts) >= 4 and parts[1] == "category" and parts[3] == "page":
+            return "../../../../"
+        if len(parts) >= 3 and parts[1] == "category":
+            return "../../"
+        return "../"
+
+    return ""
+
+
+def ensure_simulator_nav_links(path: Path) -> None:
+    text = must_read(path)
+    if "槓桿投資模擬器" in text:
+        return
+
+    prefix = resolve_nav_prefix(path)
+    injected = re.sub(
+        rf'(<a href="{re.escape(prefix)}blog\.html"(?: aria-current="page")?>Blog</a></li>)',
+        rf'\1\n<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2201"><a href="{prefix}leverage-simulator.html">槓桿投資模擬器</a></li>',
+        text,
+        count=2,
+    )
+
+    if injected == text:
+        return
+
+    path.write_text(injected, encoding="utf-8")
+
+
 def to_target_relative_href(source_path: Path, target_path: Path, href: str) -> str:
     href = href.strip()
     if not href:
@@ -306,6 +340,8 @@ def main() -> int:
     posts = upsert_posts_data(args.posts_json, title, href, iso_date)
     update_widgets_json(args.widgets_json, posts, args.latest_limit)
     update_blog_html(args.blog_html)
+    ensure_simulator_nav_links(args.blog_html)
+    ensure_simulator_nav_links(post_path)
 
     if args.category_html:
         category_post_href = to_target_relative_href(post_path, args.category_html, href)
@@ -321,6 +357,7 @@ def main() -> int:
             item_html=item_html,
             post_href_for_dedup=category_post_href,
         )
+        ensure_simulator_nav_links(args.category_html)
 
     print(f"Updated posts data: {args.posts_json}")
     print(f"Updated widgets data: {args.widgets_json}")

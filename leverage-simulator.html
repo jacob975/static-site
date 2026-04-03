@@ -1,0 +1,217 @@
+<!doctype html>
+<html dir="ltr" lang="zh-Hant">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="profile" href="https://gmpg.org/xfn/11">
+	<title>槓桿投資模擬器 - Yi Lung Chiu</title>
+
+	<link rel='stylesheet' href='https://fonts.googleapis.com/css?display=swap&family=Lato:400|Montserrat:400' />
+	<link rel='stylesheet' id='wb4wp-theme-css' href='wp-content/themes/wb4wp-wordpress-theme-production/dist/main.css%3Fver=1.0.1307.css' media='all' />
+	<link rel='stylesheet' id='navigation-5-css' href='wp-content/themes/wb4wp-wordpress-theme-production/dist/navigation-5/navigation-5.css%3Fver=1.0.1307.css' media='all' />
+	<link rel='stylesheet' id='footer-4-css' href='wp-content/themes/wb4wp-wordpress-theme-production/dist/footer-4/footer-4.css%3Fver=1.0.1307.css' media='all' />
+	<link rel='stylesheet' href='assets/css/common.css' media='all' />
+	<style>
+		.simulator-wrap {
+			max-width: none;
+			width: 100%;
+			margin: 0;
+			padding: 2rem 0 4rem;
+		}
+		.simulator-wrap h1 {
+			margin-bottom: 0.5rem;
+		}
+		.simulator-wrap p {
+			margin-bottom: 1.5rem;
+		}
+		gradio-app {
+			display: block;
+			width: 100%;
+			min-height: 760px;
+		}
+		.gradio-shell {
+			position: relative;
+			min-height: 760px;
+		}
+		.gradio-loader {
+			position: absolute;
+			inset: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: #ffffff;
+			z-index: 5;
+			transition: opacity 0.25s ease;
+		}
+		.gradio-loader[hidden] {
+			opacity: 0;
+			pointer-events: none;
+		}
+		.gradio-loader-inner {
+			width: min(520px, 86vw);
+		}
+		.gradio-loader-label {
+			font-size: 0.95rem;
+			margin-bottom: 0.65rem;
+			color: #2f3640;
+		}
+		.gradio-loader-track {
+			height: 6px;
+			border-radius: 999px;
+			background: #e6ebf2;
+			overflow: hidden;
+		}
+		.gradio-loader-bar {
+			height: 100%;
+			width: 38%;
+			border-radius: 999px;
+			background: #1f6feb;
+			animation: gradioLoad 1.25s ease-in-out infinite;
+		}
+		@keyframes gradioLoad {
+			0% {
+				transform: translateX(-120%);
+			}
+			50% {
+				transform: translateX(100%);
+			}
+			100% {
+				transform: translateX(260%);
+			}
+		}
+	</style>
+</head>
+
+<body class="wp-singular page-template page-template-wb4wp-template page-template-wb4wp-template-php page wp-embed-responsive wp-theme-wb4wp-wordpress-theme-production wb4wp-wordpress-theme-production">
+
+<nav class="wb4wp-navbar background-id_1 navigation-5 sticky">
+	<div class="wb4wp-wrapper">
+		<div class="wb4wp-brand ">
+			<a href="index.html" aria-label="Home" rel="home">
+				<div class="wb4wp-text">YLC</div>
+			</a>
+		</div>
+
+		<div class="wb4wp-menu-container">
+			<div class="wb4wp-menu">
+				<ul id="menu-bluehost-website-builder" class="wb4wp-menu-items"><li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home"><a href="index.html">Home</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="intro.html">Intro</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="blog.html">Blog</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item current_page_item"><a href="leverage-simulator.html" aria-current="page">槓桿投資模擬器</a></li>
+</ul>
+			</div>
+		</div>
+
+		<button class="wb4wp-button wb4wp-menu-button" aria-label="Open Menu">
+			<span class="bar"></span>
+			<span class="bar"></span>
+			<span class="bar"></span>
+		</button>
+	</div>
+</nav>
+
+<div id="page" class="site kv-site kv-main">
+	<div class="simulator-wrap">
+		<script
+			type="module"
+			src="https://gradio.s3-us-west-2.amazonaws.com/5.41.1/gradio.js"
+		></script>
+
+		<div class="gradio-shell">
+			<div id="gradio-loader" class="gradio-loader" aria-live="polite">
+				<div class="gradio-loader-inner">
+					<div class="gradio-loader-label">載入模擬器中...</div>
+					<div class="gradio-loader-track">
+						<div class="gradio-loader-bar"></div>
+					</div>
+				</div>
+			</div>
+			<gradio-app id="leverage-gradio-app" theme_mode="light" src="https://ylchiu-leverage-investment-simulator.hf.space/?__theme=light"></gradio-app>
+		</div>
+	</div>
+</div>
+
+<footer class="footer-4 wb4wp-footer" style="--wb4wp-footer-background: var(--wb4wp-text-background);--wb4wp-footer-text: var(--wb4wp-font-color-text);--wb4wp-footer-text-softer: var(--wb4wp-font-color-text-softer);--wb4wp-footer-colophon-background: var(--wb4wp-text-background-stronger);--wb4wp-footer-social-background: var(--wb4wp-text-social-background);--wb4wp-footer-social-color: var(--wb4wp-text-social-icon);--wb4wp-footer-border-color: var(--wb4wp-background-on-text-10);--wb4wp-footer-link: var(--wb4wp-font-color-text-softer);--wb4wp-footer-link-hover: var(--wb4wp-font-color-text);">
+	<div class="wb4wp-container">
+		<div class="wb4wp-footer-section wb4wp-footer-header wb4wp-divider-line">
+			<nav class="wb4wp-footer-nav">
+				<ul id="menu-bluehost-website-builder-1" class="wb4wp-footer-menu-items"><li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home"><a href="index.html">Home</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="intro.html">Intro</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="blog.html">Blog</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item current_page_item"><a href="leverage-simulator.html" aria-current="page">槓桿投資模擬器</a></li>
+</ul>
+			</nav>
+		</div>
+		<div class="wb4wp-footer-section wb4wp-footer-body">
+			<div class="wb4wp-info-block">
+				<a class="wb4wp-copy contact-link" href="mailto:ylchiu@gapp.nthu.edu.tw">ylchiu@gapp.nthu.edu.tw</a>
+			</div>
+		</div>
+	</div>
+</footer>
+
+<script src="wp-includes/js/jquery/jquery.min.js%3Fver=3.7.1" id="jquery-core-js"></script>
+<script src="wp-includes/js/jquery/jquery-migrate.min.js%3Fver=3.4.1" id="jquery-migrate-js"></script>
+<script src="wp-content/themes/wb4wp-wordpress-theme-production/dist/navigation-5/navigation-5.js%3Fver=1.0.1307" id="navigation-5-js"></script>
+<script>
+	(function () {
+		const app = document.getElementById("leverage-gradio-app");
+		const loader = document.getElementById("gradio-loader");
+		if (!app || !loader) {
+			return;
+		}
+
+		let settled = false;
+		const hideLoader = function () {
+			if (settled) {
+				return;
+			}
+			settled = true;
+			loader.hidden = true;
+			setTimeout(function () {
+				loader.style.display = "none";
+			}, 260);
+		};
+
+		const suppressStatusText = function () {
+			const root = app.shadowRoot;
+			if (!root) {
+				return;
+			}
+			const nodes = root.querySelectorAll("*");
+			nodes.forEach(function (el) {
+				if (/Could not get space status/i.test((el.textContent || "").trim())) {
+					el.style.display = "none";
+				}
+			});
+		};
+
+		["load", "render", "ready"].forEach(function (eventName) {
+			app.addEventListener(eventName, hideLoader, { once: true });
+		});
+
+		const observer = new MutationObserver(function () {
+			suppressStatusText();
+			const root = app.shadowRoot;
+			if (!root) {
+				return;
+			}
+			if (root.querySelector("iframe, .gradio-container, [data-testid='block-root']")) {
+				hideLoader();
+			}
+		});
+
+		observer.observe(app, { childList: true, subtree: true });
+
+		const statusTimer = setInterval(function () {
+			suppressStatusText();
+			if (settled) {
+				clearInterval(statusTimer);
+			}
+		}, 250);
+
+		setTimeout(hideLoader, 15000);
+	})();
+</script>
+</body>
+</html>

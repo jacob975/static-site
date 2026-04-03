@@ -122,6 +122,7 @@ HEAD_TEMPLATE = """<!doctype html>
                     <li class="menu-item"><a href="../index.html">Home</a></li>
                     <li class="menu-item"><a href="../intro.html">Intro</a></li>
                     <li class="menu-item"><a href="../blog.html">Blog</a></li>
+                    <li class="menu-item"><a href="../leverage-simulator.html">槓桿投資模擬器</a></li>
                 </ul>
             </div>
         </div>
@@ -181,6 +182,7 @@ FOOT_TEMPLATE = """
                     <li class="menu-item"><a href="../index.html">Home</a></li>
                     <li class="menu-item"><a href="../intro.html">Intro</a></li>
                     <li class="menu-item"><a href="../blog.html">Blog</a></li>
+                    <li class="menu-item"><a href="../leverage-simulator.html">槓桿投資模擬器</a></li>
                 </ul>
             </nav>
         </div>
