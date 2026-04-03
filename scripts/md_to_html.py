@@ -46,7 +46,7 @@ HEAD_TEMPLATE = """<!doctype html>
     <script>
     MathJax = {{
       tex: {{
-        inlineMath: [['$','$'],['\\(','\\)']],
+        inlineMath: [['$','$']],
         processEscapes: true
       }},
       options: {{
@@ -228,6 +228,27 @@ def parse_date(stem: str, override: str | None) -> dt.date:
     return dt.date.today()
 
 
+def escape_percent_in_math(md_text: str) -> str:
+    """Escape '%' only inside math delimiters so MathJax renders it literally."""
+
+    def escape_content(content: str) -> str:
+        return re.sub(r"(?<!\\)%", r"\\%", content)
+
+    def replace_dollar_math(match: re.Match[str]) -> str:
+        inner = escape_content(match.group(1))
+        return f"${inner}$"
+
+    def replace_paren_math(match: re.Match[str]) -> str:
+        inner = escape_content(match.group(1))
+        return f"\\({inner}\\)"
+
+    # Inline math with $...$
+    md_text = re.sub(r"(?<!\\)\$(.+?)(?<!\\)\$", replace_dollar_math, md_text, flags=re.DOTALL)
+    # Inline math with \(...\)
+    md_text = re.sub(r"\\\((.+?)\\\)", replace_paren_math, md_text, flags=re.DOTALL)
+    return md_text
+
+
 def find_first_image(markdown_text: str) -> str | None:
     html_img = re.search(r"<img\s+[^>]*src=['\"]([^'\"]+)['\"]", markdown_text, flags=re.IGNORECASE)
     if html_img:
@@ -331,6 +352,7 @@ def main() -> int:
     slug = out_path.stem
 
     md_text = in_path.read_text(encoding="utf-8")
+    md_text = escape_percent_in_math(md_text)
     page_title = extract_title(md_text, fallback=slug)
     post_date = parse_date(slug, args.date)
     date_human = post_date.strftime("%d %b, %Y")
