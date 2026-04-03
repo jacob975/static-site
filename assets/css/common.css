@@ -32,6 +32,20 @@ main {
     margin: 0 auto;
 }
 
+@media (max-width: 991.98px) {
+    .wb4wp-navbar .wb4wp-menu {
+        left: auto;
+        right: 0;
+        width: 25vw;
+        max-width: 25vw;
+        transform: translateX(100%);
+    }
+
+    .wb4wp-navbar .wb4wp-menu.open {
+        transform: translateX(0);
+    }
+}
+
 /* Consolidated Shared Blocks Start */
 
 /** CSS Values 2 */

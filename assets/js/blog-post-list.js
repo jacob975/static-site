@@ -162,17 +162,18 @@
   }
 
   function createIndexPostCard(item) {
-    var card = document.createElement("article");
-    var titleLink = document.createElement("a");
+    var card = document.createElement("a");
+    var title = document.createElement("h3");
     var excerpt = document.createElement("p");
     var meta = document.createElement("div");
     var time = document.createElement("time");
 
     card.className = "index-post-card";
+    card.href = item.href;
+    card.setAttribute("aria-label", "閱讀文章：" + item.title);
 
-    titleLink.className = "index-post-card-title";
-    titleLink.href = item.href;
-    titleLink.textContent = item.title;
+    title.className = "index-post-card-title";
+    title.textContent = item.title;
 
     excerpt.className = "index-post-card-excerpt";
     excerpt.textContent = item.excerpt || "（此文章尚無可顯示的摘要）";
@@ -182,7 +183,7 @@
     time.textContent = item.datetime;
     meta.appendChild(time);
 
-    card.appendChild(titleLink);
+    card.appendChild(title);
     card.appendChild(excerpt);
     card.appendChild(meta);
 
@@ -311,6 +312,86 @@
 
   function init() {
     var basePrefix = getBasePrefix();
+
+    function hydrateWpOverviewCards() {
+      var cards = document.querySelectorAll(".wpblogabc10 .kv-ee-post-wrapper");
+
+      cards.forEach(function (card) {
+        var link = card.querySelector("a[href]");
+        var titleNode;
+
+        if (!link) {
+          return;
+        }
+
+        if (card.getAttribute("tabindex") !== "0") {
+          card.setAttribute("tabindex", "0");
+        }
+
+        if (card.getAttribute("role") !== "link") {
+          card.setAttribute("role", "link");
+        }
+
+        titleNode = card.querySelector(".kv-ee-post-title");
+        if (titleNode && !card.getAttribute("aria-label")) {
+          card.setAttribute("aria-label", "閱讀文章：" + sanitizeText(titleNode.textContent));
+        }
+      });
+    }
+
+    function onWpOverviewCardClick(event) {
+      var card = event.target.closest(".wpblogabc10 .kv-ee-post-wrapper");
+      var link;
+
+      if (!card) {
+        return;
+      }
+
+      if (event.target.closest("a, button, input, select, textarea, label")) {
+        return;
+      }
+
+      link = card.querySelector("a[href]");
+      if (!link) {
+        return;
+      }
+
+      link.click();
+    }
+
+    function onWpOverviewCardKeydown(event) {
+      var card = event.target.closest(".wpblogabc10 .kv-ee-post-wrapper");
+      var link;
+
+      if (!card) {
+        return;
+      }
+
+      if (event.key !== "Enter" && event.key !== " ") {
+        return;
+      }
+
+      link = card.querySelector("a[href]");
+      if (!link) {
+        return;
+      }
+
+      event.preventDefault();
+      link.click();
+    }
+
+    hydrateWpOverviewCards();
+    document.addEventListener("click", onWpOverviewCardClick);
+    document.addEventListener("keydown", onWpOverviewCardKeydown);
+
+    if ("MutationObserver" in window) {
+      new MutationObserver(function () {
+        hydrateWpOverviewCards();
+      }).observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+    }
 
     loadData()
       .then(function (data) {
