@@ -68,6 +68,23 @@
 			background: #1f6feb;
 			animation: gradioLoad 1.25s ease-in-out infinite;
 		}
+		.gradio-loader-message {
+			display: none;
+			margin-top: 0.9rem;
+			font-size: 0.92rem;
+			line-height: 1.5;
+			color: #8a2d2d;
+		}
+		.gradio-loader.is-error .gradio-loader-track {
+			display: none;
+		}
+		.gradio-loader.is-error .gradio-loader-label {
+			color: #8a2d2d;
+			font-weight: 600;
+		}
+		.gradio-loader.is-error .gradio-loader-message {
+			display: block;
+		}
 		@keyframes gradioLoad {
 			0% {
 				transform: translateX(-120%);
@@ -120,9 +137,12 @@
 		<div class="gradio-shell">
 			<div id="gradio-loader" class="gradio-loader" aria-live="polite">
 				<div class="gradio-loader-inner">
-					<div class="gradio-loader-label">載入模擬器中...</div>
+					<div id="gradio-loader-label" class="gradio-loader-label">載入模擬器中...</div>
 					<div class="gradio-loader-track">
 						<div class="gradio-loader-bar"></div>
+					</div>
+					<div id="gradio-loader-message" class="gradio-loader-message">
+						模擬器目前可能尚未開機或服務暫時無法連線，請稍後再試。
 					</div>
 				</div>
 			</div>
@@ -157,11 +177,14 @@
 	(function () {
 		const app = document.getElementById("leverage-gradio-app");
 		const loader = document.getElementById("gradio-loader");
+		const loaderLabel = document.getElementById("gradio-loader-label");
+		const loaderMessage = document.getElementById("gradio-loader-message");
 		if (!app || !loader) {
 			return;
 		}
 
 		let settled = false;
+		let inError = false;
 		const hideLoader = function () {
 			if (settled) {
 				return;
@@ -173,6 +196,20 @@
 			}, 260);
 		};
 
+		const showUnavailable = function () {
+			if (settled || inError) {
+				return;
+			}
+			inError = true;
+			loader.classList.add("is-error");
+			if (loaderLabel) {
+				loaderLabel.textContent = "模擬器目前無法使用";
+			}
+			if (loaderMessage) {
+				loaderMessage.style.display = "block";
+			}
+		};
+
 		const suppressStatusText = function () {
 			const root = app.shadowRoot;
 			if (!root) {
@@ -182,6 +219,7 @@
 			nodes.forEach(function (el) {
 				if (/Could not get space status/i.test((el.textContent || "").trim())) {
 					el.style.display = "none";
+					showUnavailable();
 				}
 			});
 		};
@@ -211,6 +249,13 @@
 		}, 250);
 
 		setTimeout(hideLoader, 15000);
+
+		app.addEventListener("error", showUnavailable);
+		setTimeout(function () {
+			if (!settled) {
+				showUnavailable();
+			}
+		}, 7000);
 	})();
 </script>
 </body>
