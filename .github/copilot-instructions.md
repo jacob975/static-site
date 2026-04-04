@@ -9,7 +9,7 @@ The full workflow to publish a post:
    ```bash
    python3 scripts/md_to_html.py archives/20260402.md
    ```
-3. Register the post into data files:
+3. Register the post into data files and sitemap:
    ```bash
    python3 scripts/register_post.py archives/20260402.html
    ```
@@ -19,7 +19,6 @@ The full workflow to publish a post:
    # or recursively (includes category pages):
    ./scripts/check-archive-includes.sh --recursive
    ```
-5. Add the new post URL to `sitemap.xml` (a `<url>` entry with `<loc>` and `<lastmod>`)
 
 Install the required Python dependency once:
 ```bash

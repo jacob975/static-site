@@ -52,6 +52,17 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         help="Optional category archive HTML path, e.g. archives/category/解構遊戲.html",
     )
+    parser.add_argument(
+        "--sitemap",
+        type=Path,
+        default=Path("sitemap.xml"),
+        help="Path to sitemap.xml (skipped if file does not exist)",
+    )
+    parser.add_argument(
+        "--site-url",
+        default="https://www.ylchiu.com",
+        help="Public base URL used when building sitemap <loc> entries",
+    )
     return parser.parse_args()
 
 
@@ -322,6 +333,44 @@ def update_blog_html(path: Path) -> None:
     path.write_text(updated, encoding="utf-8")
 
 
+def update_sitemap(path: Path, url: str, iso_date: str) -> None:
+    """Upsert a post URL into sitemap.xml.
+
+    - If the <loc> already exists, its <lastmod> is updated.
+    - If it does not exist, a new <url> block is appended before </urlset>.
+    - If the file does not exist, the function is a no-op.
+    """
+    if not path.exists():
+        return
+
+    text = path.read_text(encoding="utf-8")
+
+    existing = re.search(
+        r"(<url>\s*<loc>" + re.escape(url) + r"</loc>.*?</url>)",
+        text,
+        flags=re.DOTALL,
+    )
+
+    if existing:
+        block = existing.group(1)
+        if "<lastmod>" in block:
+            new_block = re.sub(r"<lastmod>.*?</lastmod>", f"<lastmod>{iso_date}</lastmod>", block)
+        else:
+            new_block = block.replace("</url>", f"    <lastmod>{iso_date}</lastmod>\n  </url>")
+        text = text[: existing.start()] + new_block + text[existing.end() :]
+    else:
+        new_entry = (
+            f"  <url>\n"
+            f"    <loc>{url}</loc>\n"
+            f"    <lastmod>{iso_date}</lastmod>\n"
+            f"    <priority>0.7</priority>\n"
+            f"  </url>\n\n"
+        )
+        text = text.replace("</urlset>", new_entry + "</urlset>")
+
+    path.write_text(text, encoding="utf-8")
+
+
 def main() -> int:
     args = parse_args()
 
@@ -343,6 +392,9 @@ def main() -> int:
     ensure_simulator_nav_links(args.blog_html)
     ensure_simulator_nav_links(post_path)
 
+    post_url = f"{args.site_url.rstrip('/')}/archives/{post_path.name}"
+    update_sitemap(args.sitemap, post_url, iso_date)
+
     if args.category_html:
         category_post_href = to_target_relative_href(post_path, args.category_html, href)
         category_image_href = to_target_relative_href(post_path, args.category_html, cover_image)
@@ -362,6 +414,8 @@ def main() -> int:
     print(f"Updated posts data: {args.posts_json}")
     print(f"Updated widgets data: {args.widgets_json}")
     print(f"Ensured blog mount exists: {args.blog_html}")
+    if args.sitemap.exists():
+        print(f"Updated sitemap: {args.sitemap}")
     if args.category_html:
         print(f"Updated category archive: {args.category_html}")
     print(f"Registered post: {href} ({title}, {iso_date})")
