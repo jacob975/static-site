@@ -1,0 +1,191 @@
+<!doctype html>
+<html dir="ltr" lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="profile" href="https://gmpg.org/xfn/11">
+    <title>可以利用深度學習模型預測股票嗎？ - Yi Lung Chiu</title>
+    <meta property='og:type' content='article' />
+    <meta property='og:title' content='可以利用深度學習模型預測股票嗎？ - Yi Lung Chiu' />
+    <meta property='og:url' content='https://ylchiu.com/archives/20260109.html' />
+    <meta property='og:image' content='https://ylchiu.com/wp-content/uploads/20260109_img1.jpg' />
+    <meta name='twitter:card' content='summary_large_image' />
+    <meta name='twitter:title' content='可以利用深度學習模型預測股票嗎？ - Yi Lung Chiu' />
+    <meta name='twitter:image' content='https://ylchiu.com/wp-content/uploads/20260109_img1.jpg' />
+
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?display=swap&family=Lato:400|Montserrat:400' />
+
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$','$']],
+        processEscapes: true
+      },
+      options: {
+        ignoreHtmlClass: 'tex2jax_ignore|editor-rich-text'
+      }
+    };
+    </script>
+
+    <link rel='dns-prefetch' href='https://cdn.jsdelivr.net/' />
+    <link rel='dns-prefetch' href='https://www.googletagmanager.com/' />
+
+    <link rel='stylesheet' id='ivory-search-styles-css' href='../wp-content/plugins/add-search-to-menu/public/css/ivory-search.min.css%3Fver=5.5.14.css' media='all' />
+    <link rel='stylesheet' id='wb4wp-theme-css' href='../wp-content/themes/wb4wp-wordpress-theme-production/dist/main.css%3Fver=1.0.1307.css' media='all' />
+    <link rel='stylesheet' id='wb4wp-theme-blog-css' href='../wp-content/themes/wb4wp-wordpress-theme-production/dist/blog/blog.css%3Fver=1.0.1307.css' media='all' />
+    <link rel='stylesheet' id='wb4wp-theme-jetpack-css' href='../wp-content/themes/wb4wp-wordpress-theme-production/dist/jetpack/jetpack.css%3Fver=1.0.1307.css' media='all' />
+    <link rel='stylesheet' id='navigation-5-css' href='../wp-content/themes/wb4wp-wordpress-theme-production/dist/navigation-5/navigation-5.css%3Fver=1.0.1307.css' media='all' />
+    <link rel='stylesheet' id='footer-4-css' href='../wp-content/themes/wb4wp-wordpress-theme-production/dist/footer-4/footer-4.css%3Fver=1.0.1307.css' media='all' />
+    <link rel='stylesheet' id='wp-block-paragraph-css' href='../wp-includes/blocks/paragraph/style.min.css%3Fver=6.9.4.css' media='all' />
+    <link rel='stylesheet' id='wp-block-heading-css' href='../wp-includes/blocks/heading/style.min.css%3Fver=6.9.4.css' media='all' />
+    <link rel='stylesheet' id='wp-block-list-css' href='../wp-includes/blocks/list/style.min.css%3Fver=6.9.4.css' media='all' />
+    <link rel='stylesheet' id='wp-block-categories-css' href='../wp-includes/blocks/categories/style.min.css%3Fver=6.9.4.css' media='all' />
+    <link rel='stylesheet' id='wp-block-latest-posts-css' href='../wp-includes/blocks/latest-posts/style.min.css%3Fver=6.9.4.css' media='all' />
+    <link rel='stylesheet' id='wp-block-table-css' href='../wp-includes/blocks/table/style.min.css%3Fver=6.9.4.css' media='all' />
+    <link rel='stylesheet' id='block-generic-section-css' href='../wp-content/plugins/wb4wp-wordpress-plugin-bluehost-production/build/block-generic-section.css%3Fver=29ffbded135d1e494ff0b47bd8c692ad.css' media='all' />
+    <link rel='stylesheet' id='wp-block-columns-css' href='../wp-includes/blocks/columns/style.min.css%3Fver=6.9.4.css' media='all' />
+    <link rel='stylesheet' id='container-css' href='../wp-content/plugins/wb4wp-wordpress-plugin-bluehost-production/build/container.css%3Fver=63371796415726a33c060cd169fcd144.css' media='all' />
+    <link rel='stylesheet' id='wp-block-search-css' href='../wp-includes/blocks/search/style.min.css%3Fver=6.9.4.css' media='all' />
+    <script src="../wp-includes/js/jquery/jquery.min.js%3Fver=3.7.1" id="jquery-core-js"></script>
+    <script src="../wp-includes/js/jquery/jquery-migrate.min.js%3Fver=3.4.1" id="jquery-migrate-js"></script>
+
+    <!-- Google tag (gtag.js) snippet added by Site Kit -->
+    <script src="https://www.googletagmanager.com/gtag/js?id=GT-WF8BSRC" id="google_gtagjs-js" async></script>
+    <script id="google_gtagjs-js-after">
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("set","linker",{"domains":["ylchiu.com"]});
+    gtag("js", new Date());
+    gtag("set", "developer_id.dZTNiMT", true);
+    gtag("config", "GT-WF8BSRC");
+    </script>
+
+    <link rel='shortlink' href='../archives/20260109.html' />
+    <link rel='stylesheet' href='../assets/css/common.css' media='all' />
+    <link rel='stylesheet' href='../assets/css/pages/mathjax-fixes.css' media='all' />
+
+    <style>
+      .post-content-image {
+        width: 50%;
+        max-width: 100%;
+        height: auto;
+      }
+
+      .spoiler {
+        color: #000;
+        background-color: #000;
+      }
+    </style>
+
+</head>
+<body class="wp-singular post-template-default single single-post postid-20260109 single-format-standard wp-embed-responsive wp-theme-wb4wp-wordpress-theme-production wb4wp-wordpress-theme-production">
+
+<nav class="wb4wp-navbar background-id_1 navigation-5 sticky">
+    <div class="wb4wp-wrapper">
+        <div class="wb4wp-brand">
+            <a href="../index.html" aria-label="Home" rel="home">
+                <div class="wb4wp-text">YLC</div>
+            </a>
+        </div>
+
+        <div class="wb4wp-menu-container">
+            <div class="wb4wp-menu">
+                <ul id="menu-bluehost-website-builder" class="wb4wp-menu-items">
+                    <li class="menu-item"><a href="../index.html">Home</a></li>
+                    <li class="menu-item"><a href="../intro.html">Intro</a></li>
+                    <li class="menu-item"><a href="../blog.html">Blog</a></li>
+                    <li class="menu-item"><a href="../leverage-simulator.html">槓桿投資模擬器</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <button class="wb4wp-button wb4wp-menu-button" aria-label="Open Menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+    </div>
+</nav>
+
+<div id="page" class="site kv-site kv-main">
+    <main id="primary" class="site-main">
+        <header>
+            <h1 class="page-title screen-reader-text">可以利用深度學習模型預測股票嗎？</h1>
+        </header>
+
+        <article id="post-20260109" class="post-20260109 post type-post status-publish format-standard has-post-thumbnail hentry category-4">
+            <header class="wb4wp-blog-container entry-header wp4wp-header-image-layout-2 wp4wp-header-image">
+                <p class="wb4wp-author-post-date">09 Jan, 2026</p>
+                <div class="wbwp4-cover has-no-cover">
+                    <h1 class="wp4wp-page-title page-title entry-title has-huge-font-size">可以利用深度學習模型預測股票嗎？</h1>
+                </div>
+            </header>
+
+            <div class="wb4wp-blog-container">
+                <content class="kv-page entry-content">
+                    <div class="kv-page-content">
+<figure>
+    <img src="../wp-content/uploads/20260109_img1.jpg" alt="烏鴉與斑鳩", style="width:50%">
+    <figcaption>圖一：AI投資與指數投資的示意圖。</figcaption>
+</figure>
+<p>是這樣沒錯，但不是這樣。我覺得這一切要從撿石頭理論開始說起。</p>
+<p>你走在一條充滿石頭的路上，只能往前不能回頭，且同時只能撿一顆石頭，如何最大化撿到最大顆石頭的機率呢？ 最佳解法是觀察前1/e 部分的石頭，並記錄最大的石頭的尺寸。在剩下的路途中一旦看到比紀錄更大的石頭就毫不猶豫的撿起來，這樣有1/e的機率撿到最大的石頭。
+我注意到即便拿出了最佳策略，仍然不能保證100%撿到最大顆的石頭。</p>
+<p>如果今天走在路上的不是人，而是錢。撿的也不是石頭，而是投資標的，那麼是不是也說明最佳投資策略也不能100%撿到最大顆的石頭呢？
+我們可以試著推廣撿石頭理論，令我們的主角是市場中的一枚最小單位且不可分割的錢，每一個單位時間都可以投資在市場上的某一個標的。假設交易是自由的，錢必然能夠在看到好資產的時候立刻轉移過去。但是由於手續費的存在，交易並不真的自由。由此我們相信其結果應介於完全自由交易與棋手無悔之間，也就是說，仍無法100%保證買到最讚的投資標的。</p>
+<p>假設今天存在一個神模型，能夠瞬間判斷當下的投資標的未來的報酬率，並且使用了我們的廣義撿石頭理論進行投資，會發生什麼事呢？這樣的模型會令市場上所有的投資標的的報酬率都趨於一致，因為一旦出現報酬率較高的資產，則神模型就會立刻買入，令資產價格上升，報酬率下降。
+神模型雖然能瞬間看清每個資產的真實報酬率，但無論買哪一個資產，獲得最大報酬率的機率仍介於1/e到1之間。而且隨著越多人解鎖神模型，各資產的報酬率會逐漸收斂到同一個數。最後市場上只剩下價格噪音。因此必然存在一個損益平衡點，使得神模型的成本等於能獲得的收益，超過就開始賠錢。</p>
+<h2 class="wp-block-heading">小結</h2>
+<ol>
+<li>即使神模型存在，但是能夠帶來的優勢很有限，還要消耗一大筆手續費。相當於自費替指數投資人維持市場效率。</li>
+<li>當神模型的市佔率到達一定的程度後，即時是指數投資人也能獲得跟神模型一樣的報酬率。</li>
+<li>獲得最大報酬率的機率跟投資眼光無關，只跟交易成本有關，成本越低、成交越快，則最大報酬率的機率越接近1。</li>
+</ol>
+                        <div id="shared-post-widgets-mount"></div>
+
+                        <hr class="wp-block-separator is-style-wide">
+                        <div class="wp4wp-header-meta">
+                            <div class="wb4wp-author">
+                                <div class="wb4wp-author-detail">
+                                    <p class="wb4wp-author-name has-small-font-size">Yi-Lung Chiu</p>
+                                    <p class="wb4wp-author-post-date">09 Jan, 2026</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </content>
+            </div>
+        </article>
+    </main>
+</div>
+
+<footer class="footer-4 wb4wp-footer" style="--wb4wp-footer-background: var(--wb4wp-text-background);--wb4wp-footer-text: var(--wb4wp-font-color-text);--wb4wp-footer-text-softer: var(--wb4wp-font-color-text-softer);--wb4wp-footer-colophon-background: var(--wb4wp-text-background-stronger);--wb4wp-footer-social-background: var(--wb4wp-text-social-background);--wb4wp-footer-social-color: var(--wb4wp-text-social-icon);--wb4wp-footer-border-color: var(--wb4wp-background-on-text-10);--wb4wp-footer-link: var(--wb4wp-font-color-text-softer);--wb4wp-footer-link-hover: var(--wb4wp-font-color-text);">
+    <div class="wb4wp-container">
+        <div class="wb4wp-footer-section wb4wp-footer-header wb4wp-divider-line">
+            <nav class="wb4wp-footer-nav">
+                <ul class="wb4wp-footer-menu-items">
+                    <li class="menu-item"><a href="../index.html">Home</a></li>
+                    <li class="menu-item"><a href="../intro.html">Intro</a></li>
+                    <li class="menu-item"><a href="../blog.html">Blog</a></li>
+                    <li class="menu-item"><a href="../leverage-simulator.html">槓桿投資模擬器</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="wb4wp-footer-section wb4wp-footer-body">
+            <div class="wb4wp-info-block">
+                <a class="wb4wp-copy contact-link" href="mailto:ylchiu@gapp.nthu.edu.tw">ylchiu@gapp.nthu.edu.tw</a>
+            </div>
+        </div>
+    </div>
+    <div class="wb4wp-colophon">
+        <div class="wb4wp-left">
+            <p class="wb4wp-copyright">&copy; 2026</p>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js?ver=6.9.4" id="mathjax-js"></script>
+<script src="../wp-content/themes/wb4wp-wordpress-theme-production/dist/navigation-5/navigation-5.js%3Fver=1.0.1307" id="navigation-5-js"></script>
+<script src="../assets/js/shared-post-widgets.js"></script>
+</body>
+</html>
