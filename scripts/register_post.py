@@ -49,6 +49,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--category-html",
+        "--catgeogry-html",
+        dest="category_html",
         type=Path,
         help="Optional category archive HTML path, e.g. archives/category/解構遊戲.html",
     )
@@ -175,7 +177,12 @@ def to_target_relative_href(source_path: Path, target_path: Path, href: str) -> 
     if re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*:", href) or href.startswith("//") or href.startswith("#"):
         return href
 
-    absolute = (source_path.parent / href).resolve()
+    # Site-root style paths like "archives/20260402.html" should resolve from
+    # repository root, while explicit relative paths (./, ../) resolve from post file.
+    if href.startswith("./") or href.startswith("../"):
+        absolute = (source_path.parent / href).resolve()
+    else:
+        absolute = Path(href).resolve()
     relative = os.path.relpath(absolute, target_path.parent.resolve())
     return normalize_rel_path(relative)
 
