@@ -249,6 +249,38 @@ def escape_percent_in_math(md_text: str) -> str:
     return md_text
 
 
+def normalize_plus_unordered_lists(md_text: str) -> str:
+    """Normalize '+ ' unordered list markers to '- ' for stable parsing."""
+    return re.sub(r"^(\s*)\+\s+", r"\1- ", md_text, flags=re.MULTILINE)
+
+
+def ensure_list_block_spacing(md_text: str) -> str:
+    """Insert blank lines around list blocks so markdown parses them as lists."""
+    lines = md_text.splitlines()
+    out: list[str] = []
+
+    unordered_pat = re.compile(r"^\s*[-*+]\s+")
+    ordered_pat = re.compile(r"^\s*\d+\.\s+")
+
+    def is_list_item(line: str) -> bool:
+        return bool(unordered_pat.match(line) or ordered_pat.match(line))
+
+    for idx, line in enumerate(lines):
+        if is_list_item(line):
+            prev_src = lines[idx - 1] if idx > 0 else ""
+            if prev_src.strip() and not is_list_item(prev_src) and (not out or out[-1] != ""):
+                out.append("")
+
+        out.append(line)
+
+        if is_list_item(line):
+            next_src = lines[idx + 1] if idx + 1 < len(lines) else ""
+            if next_src.strip() and not is_list_item(next_src):
+                out.append("")
+
+    return "\n".join(out)
+
+
 def find_first_image(markdown_text: str) -> str | None:
     html_img = re.search(r"<img\s+[^>]*src=['\"]([^'\"]+)['\"]", markdown_text, flags=re.IGNORECASE)
     if html_img:
@@ -276,6 +308,8 @@ def to_absolute_image_url(image_src: str | None, base_url: str) -> str:
 def add_heading_classes(html_body: str) -> str:
     html_body = re.sub(r"<h2\b[^>]*>", '<h2 class="wp-block-heading">', html_body)
     html_body = re.sub(r"<h3\b[^>]*>", '<h3 class="wp-block-heading">', html_body)
+    html_body = re.sub(r"<ul\b[^>]*>", '<ul class="wp-block-list">', html_body)
+    html_body = re.sub(r"<ol\b[^>]*>", '<ol class="wp-block-list">', html_body)
     return html_body
 
 
@@ -352,6 +386,8 @@ def main() -> int:
     slug = out_path.stem
 
     md_text = in_path.read_text(encoding="utf-8")
+    md_text = normalize_plus_unordered_lists(md_text)
+    md_text = ensure_list_block_spacing(md_text)
     md_text = escape_percent_in_math(md_text)
     page_title = extract_title(md_text, fallback=slug)
     post_date = parse_date(slug, args.date)
