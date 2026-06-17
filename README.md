@@ -45,3 +45,8 @@ python3 scripts/register_post.py archives/20260402.html \
 說明：
 + `blog.html` 與 `index.html` 的文章清單由 `assets/js/blog-post-list.js` 讀取 `assets/data/blog-post-list.json` 動態渲染。
 + `latestPosts` 每次執行都會檢查並強制最多保留 5 篇。
+
+## Debug the website
+```bash
+python -m http.server 8000
+```
