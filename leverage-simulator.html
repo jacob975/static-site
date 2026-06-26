@@ -24,10 +24,13 @@
 		.simulator-wrap p {
 			margin-bottom: 1.5rem;
 		}
-		gradio-app {
+		.simulator-frame {
 			display: block;
 			width: 100%;
 			min-height: 760px;
+			height: 82vh;
+			border: 0;
+			background: #fff;
 		}
 		.gradio-shell {
 			position: relative;
@@ -129,11 +132,6 @@
 
 <div id="page" class="site kv-site kv-main">
 	<div class="simulator-wrap">
-		<script
-			type="module"
-			src="https://gradio.s3-us-west-2.amazonaws.com/6.11.0/gradio.js"
-		></script>
-
 		<div class="gradio-shell">
 			<div id="gradio-loader" class="gradio-loader" aria-live="polite">
 				<div class="gradio-loader-inner">
@@ -146,7 +144,15 @@
 					</div>
 				</div>
 			</div>
-			<gradio-app id="leverage-gradio-app" theme_mode="light" src="https://ylchiu-leverage-investment-simulator.hf.space/?__theme=light"></gradio-app>
+			<iframe
+				id="leverage-simulator-frame"
+				class="simulator-frame"
+				src="https://ylchiu-leverage-investment-simulator.hf.space/?__theme=light"
+				title="槓桿投資模擬器"
+				loading="eager"
+				referrerpolicy="strict-origin-when-cross-origin"
+				allow="clipboard-read; clipboard-write"
+			></iframe>
 		</div>
 	</div>
 </div>
@@ -175,11 +181,12 @@
 <script src="wp-content/themes/wb4wp-wordpress-theme-production/dist/navigation-5/navigation-5.js" id="navigation-5-js"></script>
 <script>
 	(function () {
-		const app = document.getElementById("leverage-gradio-app");
+		const frame = document.getElementById("leverage-simulator-frame");
 		const loader = document.getElementById("gradio-loader");
 		const loaderLabel = document.getElementById("gradio-loader-label");
 		const loaderMessage = document.getElementById("gradio-loader-message");
-		if (!app || !loader) {
+		const startupGraceMs = 30000;
+		if (!frame || !loader) {
 			return;
 		}
 
@@ -210,52 +217,14 @@
 			}
 		};
 
-		const suppressStatusText = function () {
-			const root = app.shadowRoot;
-			if (!root) {
-				return;
-			}
-			const nodes = root.querySelectorAll("*");
-			nodes.forEach(function (el) {
-				if (/Could not get space status/i.test((el.textContent || "").trim())) {
-					el.style.display = "none";
-					showUnavailable();
-				}
-			});
-		};
+		frame.addEventListener("load", hideLoader, { once: true });
 
-		["load", "render", "ready"].forEach(function (eventName) {
-			app.addEventListener(eventName, hideLoader, { once: true });
-		});
-
-		const observer = new MutationObserver(function () {
-			suppressStatusText();
-			const root = app.shadowRoot;
-			if (!root) {
-				return;
-			}
-			if (root.querySelector("iframe, .gradio-container, [data-testid='block-root']")) {
-				hideLoader();
-			}
-		});
-
-		observer.observe(app, { childList: true, subtree: true });
-
-		const statusTimer = setInterval(function () {
-			suppressStatusText();
-			if (settled) {
-				clearInterval(statusTimer);
-			}
-		}, 250);
-
-		setTimeout(hideLoader, 15000);
-
-		app.addEventListener("error", showUnavailable);
+		frame.addEventListener("error", showUnavailable);
 		setTimeout(function () {
-			if (!settled) {
+			if (!settled && !inError) {
 				showUnavailable();
 			}
-		}, 7000);
+		}, startupGraceMs);
 	})();
 </script>
 </body>
